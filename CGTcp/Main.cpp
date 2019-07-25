@@ -25,19 +25,26 @@ public:
 		{
 			printf("Index : %d  Data : %s  Size : %d\n",
 				nIndex++, (char*)pData, nRecvSize);
-			//SendBuffer(pData, nRecvSize);
+			SendBuffer(pData, nRecvSize);
 		}
+	}
+	virtual void OnClose()
+	{
+		printf("断开连接\n");
 	}
 };
 
 int main(int argc, char* argv[])
 {
 	MyClass Test;
-	Test.Connect("127.0.0.1", 6666);
-	getchar();
-	Test.Close();
-	getchar();
-	Test.Connect("127.0.0.1", 6666);
-	getchar();
+	if (Test.Connect("127.0.0.1", 6666))
+	{
+		printf("连接成功\n");
+		char szBuffer[20] = "Buffer is Test";
+		Test.SatrtSendBufferFromTick(200, (void*)szBuffer, strlen(szBuffer));
+		getchar();
+		Test.StopSendBuffer();
+		getchar();
+	}
 	return 0;
 }
